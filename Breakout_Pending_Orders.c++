@@ -7,6 +7,7 @@ input int period = 14;
 input int target = 750;
 input int stop = 250;
 input double volume = 1.0;
+input ENUM_TIMEFRAMES timeframe = PERIOD_D1;
 
 double top, bottom;
 
@@ -17,8 +18,8 @@ void OnTick() {
    double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
    
    // calcula topo e fundo (barra anterior)
-   top = iHigh(_Symbol, PERIOD_D1, iHighest(_Symbol, PERIOD_D1, MODE_HIGH, period, 1));
-   bottom = iLow(_Symbol, PERIOD_D1, iLowest(_Symbol, PERIOD_D1, MODE_LOW, period, 1));
+   top = iHigh(_Symbol, timeframe, iHighest(_Symbol, timeframe, MODE_HIGH, period, 1));
+   bottom = iLow(_Symbol, timeframe, iLowest(_Symbol, timeframe, MODE_LOW, period, 1));
       
    // se já tem posição aberta, não faz nada
    if(PositionSelect(_Symbol)) {
@@ -54,7 +55,7 @@ void placeBuyStop() {
    req.price = top;
    req.sl = top - stop * _Point;
    req.tp = top + target * _Point;
-   req.deviation = 10;
+   // req.deviation = 10;
    
    // obrigatório em muitas corretoras
    req.type_filling = ORDER_FILLING_RETURN;
@@ -84,7 +85,7 @@ void placeSellStop() {
    req.price = bottom;
    req.sl = bottom + stop * _Point;
    req.tp = bottom - target * _Point;
-   req.deviation = 10;
+   // req.deviation = 10;
    
    // obrigatório em muitas corretoras
    req.type_filling = ORDER_FILLING_RETURN;
